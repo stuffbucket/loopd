@@ -32,6 +32,50 @@ Markdown solves these problems:
 - Expands collapsed sections before export so they don't get missed (I'm not looking at you shadow DOM)
 - Downloads images and rewrites references to local paths
 
+## Installation
+
+### Homebrew (macOS, Linux, WSL2)
+
+```bash
+brew install stuffbucket/tap/loopd
+```
+
+### Download Binary
+
+Download the latest release for your platform from [GitHub Releases](https://github.com/stuffbucket/loopd/releases):
+
+| Platform | Architecture | Download |
+|----------|--------------|----------|
+| macOS | Intel | `loopd_*_darwin_amd64.tar.gz` |
+| macOS | Apple Silicon | `loopd_*_darwin_arm64.tar.gz` |
+| Linux | x86_64 | `loopd_*_linux_amd64.tar.gz` |
+| Linux | ARM64 | `loopd_*_linux_arm64.tar.gz` |
+| Windows | x86_64 | `loopd_*_windows_amd64.zip` |
+
+Extract and move to your PATH:
+
+```bash
+# macOS/Linux
+tar -xzf loopd_*_darwin_arm64.tar.gz
+sudo mv loopd /usr/local/bin/
+```
+
+### Build from Source
+
+Requires Go 1.24+:
+
+```bash
+go install github.com/stuffbucket/loopd@latest
+```
+
+Or clone and build:
+
+```bash
+git clone https://github.com/stuffbucket/loopd.git
+cd loopd
+go build -o loopd .
+```
+
 ## How to Use
 
 ### Quick Start: Bookmarklet (Edge/Chrome)

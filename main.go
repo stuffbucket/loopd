@@ -33,111 +33,14 @@ import (
 //go:embed templates/*
 var templates embed.FS
 
-const (
-	appName    = "loopd"
-	appVersion = "1.0.0"
+const appName = "loopd"
+
+// Version information - injected at build time via ldflags
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
 )
-
-// ASCII art digits (5 lines each, variable width)
-// Using U+2007 (Figure Space) instead of regular space to prevent trimming
-var asciiDigits = [10][]string{
-	{ // 0
-		"⠀0000⠀",
-		"00⠀⠀00",
-		"00⠀⠀00",
-		"00⠀⠀00",
-		"⠀0000⠀",
-	},
-	{ // 1
-		"⠀1111⠀",
-		"⠀⠀⠀11⠀",
-		"⠀⠀⠀11⠀",
-		"⠀⠀⠀11⠀",
-		"111111",
-	},
-	{ // 2
-		"⠀2222⠀",
-		"22⠀⠀22",
-		"⠀⠀⠀22⠀",
-		"⠀⠀22⠀⠀",
-		"222222",
-	},
-	{ // 3
-		"⠀3333⠀",
-		"33⠀⠀33",
-		"⠀⠀⠀333",
-		"33⠀⠀33",
-		"⠀3333⠀",
-	},
-	{ // 4
-		"44⠀⠀44",
-		"44⠀⠀44",
-		"444444",
-		"⠀⠀⠀⠀44",
-		"⠀⠀⠀⠀44",
-	},
-	{ // 5
-		"555555",
-		"55⠀⠀⠀⠀",
-		"55555⠀",
-		"⠀⠀⠀⠀55",
-		"55555⠀",
-	},
-	{ // 6
-		"⠀6666⠀",
-		"66⠀⠀⠀⠀",
-		"66666⠀",
-		"66⠀⠀66",
-		"⠀6666⠀",
-	},
-	{ // 7
-		"777777",
-		"⠀⠀⠀77⠀",
-		"⠀⠀77⠀⠀",
-		"⠀77⠀⠀⠀",
-		"77⠀⠀⠀⠀",
-	},
-	{ // 8
-		"⠀8888⠀",
-		"88⠀⠀88",
-		"⠀8888⠀",
-		"88⠀⠀88",
-		"⠀8888⠀",
-	},
-	{ // 9
-		"⠀9999⠀",
-		"99⠀⠀99",
-		"⠀99999",
-		"⠀⠀⠀⠀99",
-		"⠀9999⠀",
-	},
-}
-
-// renderASCIIPort renders a port number as ASCII art (returns []string for each line)
-func renderASCIIPortLines(port int) []string {
-	digits := strconv.Itoa(port)
-	lines := make([]string, 5)
-	
-	for _, ch := range digits {
-		d := int(ch - '0')
-		for i := 0; i < 5; i++ {
-			if lines[i] != "" {
-				lines[i] += "  " // 2-space gap between digits
-			}
-			lines[i] += asciiDigits[d][i]
-		}
-	}
-	return lines
-}
-
-// renderASCIIPort renders port as styled ASCII art string
-func renderASCIIPort(port int) string {
-	portStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981"))
-	lines := renderASCIIPortLines(port)
-	// Join all lines first, then render once - lipgloss trims leading/trailing
-	// whitespace per-render call, so rendering the whole block preserves spacing
-	return portStyle.Render(strings.Join(lines, "\n"))
-}
 
 // Config holds application settings
 type Config struct {
@@ -221,7 +124,7 @@ EXAMPLES:
     %s --headless                 # Run without TUI, Ctrl+C to quit
     %s --save-config             # Save current settings for next time
 
-`, appName, appVersion, appName, appName, appName, appName, appName, appName, appName, appName)
+`, appName, version, appName, appName, appName, appName, appName, appName, appName, appName)
 	}
 }
 
@@ -264,19 +167,19 @@ type clearFilePickerMsg struct{}
 
 // TUI model
 type model struct {
-	input      textinput.Model
-	filepicker filepicker.Model
-	viewport   viewport.Model
-	logs       []logEntry
-	maxLogs    int
-	url        string
-	watchDir   string
-	quitting   bool
-	width      int
-	height     int
-	logChan    chan logMsg
-	mode       uiMode
-	ready      bool // viewport initialized
+	input       textinput.Model
+	filepicker  filepicker.Model
+	viewport    viewport.Model
+	logs        []logEntry
+	maxLogs     int
+	url         string
+	watchDir    string
+	quitting    bool
+	width       int
+	height      int
+	logChan     chan logMsg
+	mode        uiMode
+	ready       bool // viewport initialized
 	showWelcome bool
 }
 
@@ -331,25 +234,25 @@ func initialModel(url, watchDir string, logChan chan logMsg) model {
 
 	// File picker - show .tar files only for selection
 	fp := filepicker.New()
-	fp.AllowedTypes = []string{".tar"}  // Only .tar files can be selected
+	fp.AllowedTypes = []string{".tar"} // Only .tar files can be selected
 	fp.CurrentDirectory = watchDir
 	fp.ShowHidden = false
 	fp.ShowSize = true
 	fp.ShowPermissions = false
-	fp.DirAllowed = true   // Can navigate into directories  
-	fp.FileAllowed = true  // Can select .tar files
+	fp.DirAllowed = true  // Can navigate into directories
+	fp.FileAllowed = true // Can select .tar files
 	fp.Height = 15
 	fp.AutoHeight = false
 	// Style the filepicker - clear visual feedback
 	// Green = selectable (.tar files), Blue = navigable (directories), Gray = disabled
-	fp.Styles.Cursor = lipgloss.NewStyle().Foreground(lipgloss.Color("#FBBF24")).Bold(true)          // Yellow cursor >
-	fp.Styles.Directory = lipgloss.NewStyle().Foreground(lipgloss.Color("#3B82F6")).Bold(true)       // Blue directories
-	fp.Styles.File = lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981"))                        // Green .tar files
-	fp.Styles.Symlink = lipgloss.NewStyle().Foreground(lipgloss.Color("#A78BFA"))                     // Purple symlinks
-	fp.Styles.Selected = lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981")).Bold(true)         // Green selected
-	fp.Styles.DisabledCursor = lipgloss.NewStyle().Foreground(lipgloss.Color("#FBBF24"))              // Yellow cursor on disabled
-	fp.Styles.DisabledFile = lipgloss.NewStyle().Foreground(lipgloss.Color("#4B5563"))                // Dark gray non-.tar files
-	fp.Styles.DisabledSelected = lipgloss.NewStyle().Foreground(lipgloss.Color("#6B7280"))            // Gray disabled selected
+	fp.Styles.Cursor = lipgloss.NewStyle().Foreground(lipgloss.Color("#FBBF24")).Bold(true)    // Yellow cursor >
+	fp.Styles.Directory = lipgloss.NewStyle().Foreground(lipgloss.Color("#3B82F6")).Bold(true) // Blue directories
+	fp.Styles.File = lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981"))                 // Green .tar files
+	fp.Styles.Symlink = lipgloss.NewStyle().Foreground(lipgloss.Color("#A78BFA"))              // Purple symlinks
+	fp.Styles.Selected = lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981")).Bold(true)  // Green selected
+	fp.Styles.DisabledCursor = lipgloss.NewStyle().Foreground(lipgloss.Color("#FBBF24"))       // Yellow cursor on disabled
+	fp.Styles.DisabledFile = lipgloss.NewStyle().Foreground(lipgloss.Color("#4B5563"))         // Dark gray non-.tar files
+	fp.Styles.DisabledSelected = lipgloss.NewStyle().Foreground(lipgloss.Color("#6B7280"))     // Gray disabled selected
 
 	// Viewport for logs
 	vp := viewport.New(80, 10)
@@ -982,7 +885,7 @@ func (m model) View() string {
 	}
 
 	// Header (fixed at top) - 2 lines
-	header := titleStyle.Render(fmt.Sprintf("%s v%s", appName, appVersion))
+	header := titleStyle.Render(fmt.Sprintf("%s v%s", appName, version))
 	urlLine := dimStyle.Render("  Preview: ") + urlStyle.Render(m.url) +
 		dimStyle.Render("  •  Watching: ") + pathStyle.Render(m.watchDir)
 
@@ -1018,25 +921,25 @@ func (m model) View() string {
 			Background(lipgloss.Color("#1F2937")).
 			Padding(0, 1).
 			Bold(true)
-		
+
 		// Create clickable-looking breadcrumb
 		currentDir := m.filepicker.CurrentDirectory
 		if home, err := os.UserHomeDir(); err == nil && strings.HasPrefix(currentDir, home) {
 			currentDir = "~" + currentDir[len(home):]
 		}
 		breadcrumb := breadcrumbStyle.Render(" 📁 " + currentDir + " ")
-		
+
 		// Color legend
 		legendStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#6B7280")).Italic(true)
 		greenStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981"))
 		blueStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#3B82F6"))
 		grayStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#4B5563"))
-		
-		legend := legendStyle.Render("  ") + 
+
+		legend := legendStyle.Render("  ") +
 			greenStyle.Render(".tar") + legendStyle.Render("=select  ") +
 			blueStyle.Render("dir/") + legendStyle.Render("=navigate  ") +
 			grayStyle.Render("other") + legendStyle.Render("=disabled")
-		
+
 		mainContent = breadcrumb + legend + "\n\n" + m.filepicker.View()
 	} else if m.showWelcome && len(m.logs) == 0 {
 		mainContent = getWelcomeContent()
@@ -1049,7 +952,7 @@ func (m model) View() string {
 
 	// Build the view from bottom up
 	// We want: header at top, main content fills middle, input+status at bottom
-	
+
 	// Calculate main content height
 	headerLines := 2
 	inputLines := 3
@@ -1099,7 +1002,7 @@ func runHeadless(url, watchDir string) {
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#6B7280"))
 
 	fmt.Println()
-	fmt.Printf("  %s %s\n", headerStyle.Render(appName), dimStyle.Render("v"+appVersion))
+	fmt.Printf("  %s %s\n", headerStyle.Render(appName), dimStyle.Render("v"+version))
 	fmt.Println()
 	fmt.Printf("  %s  %s\n", labelStyle.Render("➜  Local:"), urlStyle.Render(url))
 	fmt.Printf("  %s  %s\n", labelStyle.Render("➜  Watch:"), pathStyle.Render(watchDir))
@@ -1129,19 +1032,19 @@ func handleAPIRoutes(w http.ResponseWriter, r *http.Request) {
 	}
 	base := fmt.Sprintf("http://%s", host)
 	routes := map[string]string{
-		"/":                "Landing page with instructions",
-		"/minimal":         "Dark mode preview",
-		"/github":          "GitHub file browser style",
-		"/vignelli":        "Typography focused",
-		"/raw":             "Raw markdown content",
-		"/content":         "Markdown with image URLs resolved",
-		"/images/":         "Image browser",
-		"/api/status":      "Server status JSON",
-		"/api/tar":         "Download loaded tar file",
-		"/api/routes":      "This endpoint",
-		"/api/open":        "Open browser (query: ?port=8080)",
+		"/":                 "Landing page with instructions",
+		"/minimal":          "Dark mode preview",
+		"/github":           "GitHub file browser style",
+		"/vignelli":         "Typography focused",
+		"/raw":              "Raw markdown content",
+		"/content":          "Markdown with image URLs resolved",
+		"/images/":          "Image browser",
+		"/api/status":       "Server status JSON",
+		"/api/tar":          "Download loaded tar file",
+		"/api/routes":       "This endpoint",
+		"/api/open":         "Open browser (query: ?port=8080)",
 		"/api/figma-detect": "Figma desktop and MCP server detection",
-		"/loopd.js":        "Export script for clipboard",
+		"/loopd.js":         "Export script for clipboard",
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
@@ -1176,7 +1079,7 @@ func main() {
 		// Colorized version output
 		nameStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981")).Bold(true)
 		versionStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#6B7280"))
-		fmt.Printf("%s %s\n", nameStyle.Render(appName), versionStyle.Render("v"+appVersion))
+		fmt.Printf("%s %s\n", nameStyle.Render(appName), versionStyle.Render("v"+version))
 		os.Exit(0)
 	}
 
@@ -1187,7 +1090,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, errorStyle.Render(fmt.Sprintf("Error: %v", err)))
 			os.Exit(1)
 		}
-		
+
 		// Styles for colorized output
 		successStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#10B981")).Bold(true)
 		headerStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#E5E7EB")).Bold(true)
@@ -1195,54 +1098,54 @@ func main() {
 		textStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#9CA3AF"))
 		codeStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#A78BFA"))
 		dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#6B7280"))
-		
+
 		fmt.Println()
 		fmt.Println(successStyle.Render("✓ Export script copied to clipboard!"))
 		fmt.Println()
 		fmt.Println(headerStyle.Render("Next Steps:"))
 		fmt.Println()
-		
+
 		// Step 1
 		fmt.Printf("  %s %s\n", stepStyle.Render("1."), headerStyle.Render("Open a Loop page"))
 		fmt.Printf("     %s\n", textStyle.Render("Navigate to the Loop page you want to export in your browser"))
 		fmt.Println()
-		
+
 		// Step 2
 		fmt.Printf("  %s %s\n", stepStyle.Render("2."), headerStyle.Render("Open DevTools Console"))
 		fmt.Println()
-		fmt.Printf("     %s  %s   %s\n", 
+		fmt.Printf("     %s  %s   %s\n",
 			dimStyle.Render("Chrome:"),
 			codeStyle.Render("⌘⌥J"),
 			dimStyle.Render("(Mac)  Ctrl+Shift+J (Win)"))
-		fmt.Printf("     %s %s   %s\n", 
+		fmt.Printf("     %s %s   %s\n",
 			dimStyle.Render("Firefox:"),
 			codeStyle.Render("⌘⌥K"),
 			dimStyle.Render("(Mac)  Ctrl+Shift+K (Win)"))
-		fmt.Printf("     %s  %s   %s\n", 
+		fmt.Printf("     %s  %s   %s\n",
 			dimStyle.Render("Safari:"),
 			codeStyle.Render("⌘⌥C"),
 			dimStyle.Render("(Mac)  Enable in Develop menu first"))
-		fmt.Printf("     %s    %s   %s\n", 
+		fmt.Printf("     %s    %s   %s\n",
 			dimStyle.Render("Edge:"),
 			codeStyle.Render("⌘⌥J"),
 			dimStyle.Render("(Mac)  Ctrl+Shift+J (Win)"))
 		fmt.Println()
-		
+
 		// Step 3
 		fmt.Printf("  %s %s\n", stepStyle.Render("3."), headerStyle.Render("Paste and run"))
-		fmt.Printf("     %s %s %s\n", 
+		fmt.Printf("     %s %s %s\n",
 			textStyle.Render("Paste the script into the console and press"),
 			codeStyle.Render("Enter"),
 			textStyle.Render(""))
 		fmt.Println()
-		
+
 		// Step 4
 		fmt.Printf("  %s %s\n", stepStyle.Render("4."), headerStyle.Render("Load the export"))
 		fmt.Printf("     %s\n", textStyle.Render("A .tar file will download. Load it in loopd:"))
 		fmt.Printf("     %s  %s\n", dimStyle.Render("•"), codeStyle.Render("./loopd"))
 		fmt.Printf("     %s  %s\n", dimStyle.Render("•"), textStyle.Render("Press Tab to browse, or /load <file.tar>"))
 		fmt.Println()
-		
+
 		os.Exit(0)
 	}
 
@@ -1792,7 +1695,7 @@ func handleLoopdJS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	exeDir := filepath.Dir(exePath)
-	
+
 	// Try multiple potential locations for loopd.js
 	potentialPaths := []string{
 		// Development: relative to source directory
@@ -2060,7 +1963,7 @@ func handleImages(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		
+
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		fmt.Fprintf(w, `<!DOCTYPE html>
 <html><head><title>images/</title>

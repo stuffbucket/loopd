@@ -117,7 +117,7 @@ func printHumanOutput(result *DetectionResult) {
 	// Box characters
 	fmt.Printf("%s %s\n", headerStyle.Render("╭─"), headerStyle.Render(fmt.Sprintf("%s v%s", appName, appVersion)))
 	fmt.Printf("%s %s %s\n", dimStyle.Render("├─"), labelStyle.Render("Timestamp:"), valueStyle.Render(result.Timestamp))
-	
+
 	// Figma running status
 	figmaStatus := errorStyle.Render("false")
 	if result.FigmaRunning {
@@ -127,7 +127,7 @@ func printHumanOutput(result *DetectionResult) {
 	if result.ProcessPID > 0 {
 		fmt.Printf("%s %s %s\n", dimStyle.Render("│  └─"), labelStyle.Render("PID:"), valueStyle.Render(fmt.Sprintf("%d", result.ProcessPID)))
 	}
-	
+
 	// Port status
 	portStatus := errorStyle.Render("false")
 	if result.PortBound {
@@ -135,7 +135,7 @@ func printHumanOutput(result *DetectionResult) {
 	}
 	fmt.Printf("%s %s %s\n", dimStyle.Render("├─"), labelStyle.Render(fmt.Sprintf("Port %d Bound:", mcpPort)), portStatus)
 	fmt.Printf("%s %s %s\n", dimStyle.Render("├─"), labelStyle.Render("Status:"), valueStyle.Render(result.Status))
-	
+
 	// Final status
 	if result.BothReady {
 		fmt.Printf("%s %s\n", dimStyle.Render("╰─"), successStyle.Render("✓ Ready for integration"))
