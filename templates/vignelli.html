@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.TarFile}}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    <!-- Variable fonts: Inter (sans), Source Serif 4 (serif), JetBrains Mono (code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /*
+         * Vignelli-inspired typography with modern type ramp
+         * 
+         * Type scale: Golden ratio (φ ≈ 1.618) for large screens,
+         * Minor third (~1.2) for small screens, fluid interpolation.
+         * 
+         * Small master: 320px viewport, base 16px, ratio 1.2
+         * Large master: 1200px viewport, base 18px, ratio 1.5 (near φ)
+         * 
+         * Sans (Inter): headings, UI, tables
+         * Serif (Source Serif 4): body paragraphs
+         * Mono (JetBrains Mono): code
+         */
+        
+        :root {
+            /* Colors - Vignelli palette */
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-600: #525252;
+            --gray-400: #a3a3a3;
+            --gray-100: #f5f5f5;
+            --red: #dc2626;
+            
+            /* Spacing unit */
+            --unit: 8px;
+            
+            /* Measure: clamped line length for optimal reading (~80ch target) */
+            --measure: clamp(60ch, 78ch, 85ch);
+            --max-width: min(100% - 1.5rem, 66rem);
+            
+            /* 
+             * Fluid type scale using clamp()
+             * Formula: clamp(min, preferred, max)
+             * Preferred uses viewport interpolation: calc(min + (max - min) * ((100vw - 320px) / (1200 - 320)))
+             * Simplified with CSS clamp and vw units
+             */
+            
+            /* Base sizes */
+            --font-size-sm-min: 0.875rem;   /* 14px */
+            --font-size-sm-max: 0.9375rem;  /* 15px */
+            --font-size-base-min: 1rem;     /* 16px */
+            --font-size-base-max: 1.125rem; /* 18px */
+            
+            /* Type scale - small master (1.2 ratio) to large master (1.5 ratio) */
+            /* Step -1: small/caption */
+            --step--1: clamp(0.833rem, 0.8rem + 0.15vw, 0.9375rem);
+            /* Step 0: base/body */
+            --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+            /* Step 1: h4/large body */
+            --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+            /* Step 2: h3 */
+            --step-2: clamp(1.44rem, 1.25rem + 0.95vw, 2rem);
+            /* Step 3: h2 */
+            --step-3: clamp(1.728rem, 1.4rem + 1.64vw, 2.625rem);
+            /* Step 4: h1 */
+            --step-4: clamp(2.074rem, 1.55rem + 2.62vw, 3.5rem);
+            /* Step 5: display */
+            --step-5: clamp(2.488rem, 1.7rem + 3.94vw, 4.5rem);
+            
+            /* Leading (line-height) */
+            --leading-tight: 1.1;
+            --leading-snug: 1.25;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.625;
+            
+            /* Tracking (letter-spacing) */
+            --tracking-tight: -0.025em;
+            --tracking-snug: -0.015em;
+            --tracking-normal: 0;
+            --tracking-wide: 0.025em;
+            --tracking-wider: 0.05em;
+            
+            /* Font stacks */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Source Serif 4', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 100%;
+            font-optical-sizing: auto;
+            text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-size: var(--step-0);
+            line-height: var(--leading-relaxed);
+            letter-spacing: var(--tracking-normal);
+            color: var(--black);
+            background: var(--white);
+            font-variant-ligatures: common-ligatures contextual;
+            font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+        }
+        
+        /* File location bar - UI element, uses sans */
+        .location-bar {
+            font-family: var(--font-mono);
+            background: var(--black);
+            color: var(--white);
+            padding: calc(var(--unit) * 1.5) calc(var(--unit) * 3);
+            font-size: var(--step--1);
+            letter-spacing: var(--tracking-normal);
+        }
+        
+        .location-bar-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--unit) * 2);
+        }
+        
+        .location-label {
+            font-family: var(--font-sans);
+            color: var(--gray-400);
+            text-transform: uppercase;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            letter-spacing: var(--tracking-wider);
+        }
+        
+        .location-path {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .location-copy {
+            font-family: var(--font-sans);
+            background: transparent;
+            border: 1px solid var(--gray-600);
+            color: var(--white);
+            padding: 4px 12px;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+            transition: all 0.15s ease;
+        }
+        
+        .location-copy:hover {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
+        
+        /* Container */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: calc(var(--unit) * 6) calc(var(--unit) * 2);
+        }
+        
+        /* Directory listing - UI element, uses sans */
+        .directory {
+            font-family: var(--font-sans);
+            border: 2px solid var(--black);
+            margin: 0 auto calc(var(--unit) * 8);
+            max-width: var(--measure);
+        }
+        
+        .directory-header {
+            background: var(--black);
+            color: var(--white);
+            padding: calc(var(--unit) * 1.5) calc(var(--unit) * 3);
+            font-weight: 600;
+            font-size: var(--step--1);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .directory-list {
+            list-style: none;
+        }
+        
+        .directory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(var(--unit) * 1.5) calc(var(--unit) * 3);
+            border-bottom: 1px solid var(--gray-100);
+            font-size: var(--step--1);
+        }
+        
+        .directory-item:last-child {
+            border-bottom: none;
+        }
+        
+        .directory-item a {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 450;
+        }
+        
+        .directory-item a:hover {
+            color: var(--red);
+        }
+        
+        .directory-meta {
+            color: var(--gray-600);
+            font-size: calc(var(--step--1) * 0.9);
+            font-weight: 400;
+        }
+        
+        /* Markdown content */
+        .content {
+            max-width: var(--measure);
+            margin: 0 auto;
+        }
+        
+        /* Headings - sans-serif, tight leading, negative tracking at large sizes */
+        .content h1,
+        .content h2,
+        .content h3,
+        .content h4,
+        .content h5,
+        .content h6 {
+            font-family: var(--font-sans);
+            font-weight: 650;
+            font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
+        }
+        
+        .content h1 {
+            font-size: var(--step-4);
+            font-weight: 700;
+            line-height: var(--leading-tight);
+            letter-spacing: var(--tracking-tight);
+            margin: 0 0 calc(var(--unit) * 4) 0;
+        }
+        
+        .content h2 {
+            font-size: var(--step-3);
+            line-height: var(--leading-snug);
+            letter-spacing: var(--tracking-snug);
+            margin: calc(var(--unit) * 10) 0 calc(var(--unit) * 3) 0;
+        }
+        
+        .content h3 {
+            font-size: var(--step-2);
+            line-height: var(--leading-snug);
+            letter-spacing: var(--tracking-normal);
+            margin: calc(var(--unit) * 8) 0 calc(var(--unit) * 2) 0;
+        }
+        
+        .content h4 {
+            font-size: var(--step-1);
+            line-height: var(--leading-snug);
+            letter-spacing: var(--tracking-normal);
+            margin: calc(var(--unit) * 6) 0 calc(var(--unit) * 2) 0;
+        }
+        
+        .content h5,
+        .content h6 {
+            font-size: var(--step-0);
+            font-weight: 600;
+            line-height: var(--leading-normal);
+            letter-spacing: var(--tracking-wide);
+            text-transform: uppercase;
+            margin: calc(var(--unit) * 5) 0 calc(var(--unit) * 2) 0;
+        }
+        
+        .content h6 {
+            font-size: var(--step--1);
+            color: var(--gray-600);
+        }
+        
+        /* Body text - serif, relaxed leading */
+        .content p {
+            font-family: var(--font-serif);
+            font-size: var(--step-0);
+            line-height: var(--leading-relaxed);
+            margin: 0 0 calc(var(--unit) * 3) 0;
+            hanging-punctuation: first allow-end last;
+        }
+        
+        .content a {
+            color: var(--black);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 0.15em;
+            transition: color 0.15s ease;
+        }
+        
+        .content a:hover {
+            color: var(--red);
+        }
+        
+        .content strong {
+            font-weight: 650;
+        }
+        
+        .content em {
+            font-style: italic;
+        }
+        
+        /* Lists - serif body, comfortable spacing */
+        .content ul,
+        .content ol {
+            font-family: var(--font-serif);
+            margin: 0 0 calc(var(--unit) * 3) 0;
+            padding-left: 1.5em;
+        }
+        
+        .content li {
+            margin-bottom: calc(var(--unit) * 1);
+            line-height: var(--leading-relaxed);
+        }
+        
+        .content li::marker {
+            color: var(--gray-600);
+        }
+        
+        /* Blockquotes - slightly smaller, indented */
+        .content blockquote {
+            margin: calc(var(--unit) * 5) 0;
+            padding: calc(var(--unit) * 3) calc(var(--unit) * 4);
+            border-left: 3px solid var(--black);
+            background: var(--gray-100);
+            font-size: calc(var(--step-0) * 0.95);
+        }
+        
+        .content blockquote p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Code - monospace */
+        .content code {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            font-weight: 450;
+            background: var(--gray-100);
+            padding: 0.1em 0.35em;
+            border-radius: 3px;
+        }
+        
+        .content pre {
+            margin: calc(var(--unit) * 5) 0;
+            padding: calc(var(--unit) * 3);
+            background: var(--black);
+            color: var(--white);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: var(--step--1);
+            line-height: var(--leading-normal);
+            border-radius: 2px;
+        }
+        
+        .content pre code {
+            background: none;
+            padding: 0;
+            font-size: inherit;
+            font-weight: 400;
+        }
+        
+        /* Images */
+        .content img {
+            max-width: 100%;
+            height: auto;
+            margin: calc(var(--unit) * 5) 0;
+            display: block;
+        }
+        
+        /* Tables - sans-serif for data clarity */
+        .content table {
+            font-family: var(--font-sans);
+            width: 100%;
+            border-collapse: collapse;
+            margin: calc(var(--unit) * 5) 0;
+            font-size: var(--step--1);
+            line-height: var(--leading-normal);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .content th {
+            font-family: var(--font-sans);
+            text-align: left;
+            font-weight: 600;
+            padding: calc(var(--unit) * 1.5) calc(var(--unit) * 2);
+            border-bottom: 2px solid var(--black);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+            font-size: calc(var(--step--1) * 0.85);
+        }
+        
+        .content td {
+            font-family: var(--font-sans);
+            padding: calc(var(--unit) * 1.5) calc(var(--unit) * 2);
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: top;
+        }
+        
+        .content tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .content hr {
+            border: none;
+            border-top: 2px solid var(--black);
+            margin: calc(var(--unit) * 10) 0;
+        }
+        
+        /* Waiting state */
+        .waiting {
+            font-family: var(--font-sans);
+            text-align: center;
+            padding: calc(var(--unit) * 20) calc(var(--unit) * 3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 60vh;
+            justify-content: center;
+        }
+        
+        .waiting h2 {
+            font-size: var(--step-3);
+            font-weight: 650;
+            letter-spacing: var(--tracking-snug);
+            margin-bottom: calc(var(--unit) * 2);
+        }
+        
+        .waiting p {
+            color: var(--gray-600);
+            font-size: var(--step-0);
+            margin: calc(var(--unit) * 0.5) 0;
+        }
+        
+        .pulse {
+            width: 12px;
+            height: 12px;
+            background: var(--gray-600);
+            border-radius: 50%;
+            margin: calc(var(--unit) * 4) auto;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        /* Footer */
+        .footer {
+            font-family: var(--font-sans);
+            margin-top: calc(var(--unit) * 12);
+            padding-top: calc(var(--unit) * 4);
+            border-top: 1px solid var(--gray-100);
+            font-size: var(--step--1);
+            color: var(--gray-600);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {{if .HasContent}}
+    <div class="location-bar">
+        <div class="location-bar-inner">
+            <span class="location-label">Path</span>
+            <span class="location-path" id="filepath">{{.TarDir}}</span>
+            <button class="location-copy" onclick="copyPath()">Copy</button>
+        </div>
+    </div>
+    {{end}}
+    
+    <div class="container">
+        {{if .HasContent}}
+        <div class="directory">
+            <div class="directory-header">Contents</div>
+            <ul class="directory-list">
+                <li class="directory-item">
+                    <a href="/raw">content.md</a>
+                    <span class="directory-meta">{{.MarkdownSize}}</span>
+                </li>
+                <li class="directory-item">
+                    <a href="/images/">images/</a>
+                    <span class="directory-meta">{{.ImageCount}} files</span>
+                </li>
+            </ul>
+        </div>
+        
+        <article id="content" class="content"></article>
+        
+        <div class="footer">
+            Loaded {{.LoadedAt}} from {{.TarFile}}
+        </div>
+        {{else}}
+        <div class="waiting">
+            <h2>Waiting</h2>
+            <p>Drop a Loop export .tar file into the watched directory</p>
+            <p>The preview will load automatically</p>
+            <div class="pulse"></div>
+        </div>
+        {{end}}
+    </div>
+    
+    <script>
+        "use strict";
+        
+        function copyPath() {
+            var path = document.getElementById("filepath").textContent;
+            navigator.clipboard.writeText(path)
+                .then(function() {
+                    var btn = document.querySelector(".location-copy");
+                    btn.textContent = "Copied";
+                    setTimeout(function() { btn.textContent = "Copy"; }, 1500);
+                })
+                .catch(function(err) {
+                    console.error("Failed to copy path:", err);
+                });
+        }
+        
+        {{if .HasContent}}
+        (function() {
+            fetch("/content")
+                .then(function(r) {
+                    if (!r.ok) { throw new Error("Failed to load content"); }
+                    return r.text();
+                })
+                .then(function(md) {
+                    marked.setOptions({
+                        gfm: true,
+                        breaks: false,
+                        pedantic: false
+                    });
+                    document.getElementById("content").innerHTML = marked.parse(md);
+                })
+                .catch(function(err) {
+                    document.getElementById("content").innerHTML = "<p>Error: " + err + "</p>";
+                });
+        })();
+        {{else}}
+        (function() {
+            setInterval(function() {
+                fetch("/api/status")
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (data.loaded) { location.reload(); }
+                    })
+                    .catch(function() { /* ignore polling errors */ });
+            }, 2000);
+        })();
+        {{end}}
+    </script>
+</body>
+</html>

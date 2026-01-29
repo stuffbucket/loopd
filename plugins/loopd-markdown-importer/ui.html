@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      color: #333;
+      background: #fafafa;
+    }
+
+    .container {
+      padding: 16px;
+      width: 360px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .scrollable {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer {
+      padding-top: 12px;
+      border-top: 1px solid #e0e0e0;
+      margin-top: auto;
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .header p {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 4px;
+    }
+
+    input[type="file"],
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: inherit;
+    }
+
+    input[type="file"] {
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    input[type="text"]::placeholder {
+      color: #999;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #0099ff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #0080dd;
+    }
+
+    button:active {
+      background: #0066bb;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .status {
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
+    }
+
+    .status.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ffcdd2;
+    }
+
+    .status.info {
+      background: #e3f2fd;
+      color: #1565c0;
+      border: 1px solid #bbdefb;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
+
+    label {
+      font-size: 11px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #666;
+      padding: 12px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ddd;
+      border-top-color: #0099ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #e0e0e0;
+      margin: 0 -12px;
+      padding: 0 12px;
+    }
+
+    .tab {
+      padding: 8px 0;
+      margin-right: 16px;
+      border: none;
+      background: none;
+      color: #666;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      color: #000;
+      border-bottom-color: #0099ff;
+    }
+
+    .tab-content {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tab-content.active {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>loopd Markdown Importer</h1>
+      <p>Convert Loop markdown exports to Figma designs</p>
+    </div>
+
+    <div class="scrollable">
+    <div class="tabs">
+      <button class="tab active" data-tab="file">📁 From File</button>
+      <button class="tab" data-tab="url">🔗 From URL</button>
+      <button class="tab" data-tab="help">ℹ️ Help</button>
+    </div>
+
+    <!-- File Tab -->
+    <div id="file-tab" class="tab-content active">
+      <div class="section">
+        <div class="section-title">Select tar file</div>
+        <input type="file" id="file-input" accept=".tar,application/x-tar" />
+        <p style="font-size: 10px; color: #999; margin-top: 4px;">
+          Export your Loop page using loopd.js to get a .tar file with content.md and images/
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Options</div>
+        <div class="options">
+          <div class="checkbox-group">
+            <input type="checkbox" id="create-styles" checked />
+            <label for="create-styles">Generate text styles from headings</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="create-colors" checked />
+            <label for="create-colors">Apply semantic colors</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="embed-images" checked />
+            <label for="embed-images">Embed images from tar</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="auto-frame" checked />
+            <label for="auto-frame">Create auto-layout frame</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- URL Tab -->
+    <div id="url-tab" class="tab-content">
+      <div class="section">
+        <div class="section-title">Load from preview server</div>
+        <button id="load-from-server" style="background: #10B981;">📥 Load from loopd</button>
+        <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">
+          Loads the currently open tar file from the loopd server running on localhost:8080
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Or enter custom URL</div>
+        <input type="text" id="server-url" placeholder="http://localhost:8080/api/tar" />
+        <p style="font-size: 10px; color: #999; margin-top: 4px;">
+          Enter the full URL to a .tar file endpoint
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Options</div>
+        <div class="options">
+          <div class="checkbox-group">
+            <input type="checkbox" id="create-styles-url" checked />
+            <label for="create-styles-url">Generate text styles from headings</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="create-colors-url" checked />
+            <label for="create-colors-url">Apply semantic colors</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="embed-images-url" checked />
+            <label for="embed-images-url">Embed images from tar</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="auto-frame-url" checked />
+            <label for="auto-frame-url">Create auto-layout frame</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Tab -->
+    <div id="help-tab" class="tab-content">
+      <div class="section">
+        <div class="section-title">Getting Started</div>
+        <p style="line-height: 1.6; color: #666;">
+          <strong>Step 1:</strong> Export a Loop page<br>
+          Open your Loop page and paste the loopd.js script in the console to create a .tar file.
+        </p>
+        <p style="line-height: 1.6; color: #666; margin-top: 8px;">
+          <strong>Step 2:</strong> Import to Figma<br>
+          Select the .tar file above and click "Import". The plugin will create a structured Figma design with text, images, and styles.
+        </p>
+        <p style="line-height: 1.6; color: #666; margin-top: 8px;">
+          <strong>Step 3:</strong> Customize<br>
+          The generated design uses auto-layout frames and text styles for easy editing.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Features</div>
+        <ul style="margin-left: 16px; color: #666;">
+          <li>Preserves heading hierarchy</li>
+          <li>Embeds images with proper sizing</li>
+          <li>Applies typography and colors</li>
+          <li>Creates auto-layout frames</li>
+          <li>Generates reusable text styles</li>
+        </ul>
+      </div>
+    </div>
+    </div><!-- end scrollable -->
+
+    <div class="footer">
+      <div class="status" id="status"></div>
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 8px;">Processing...</p>
+      </div>
+      <button id="import-btn">Import to Figma</button>
+    </div>
+  </div>
+
+  <script>
+    // UI Controller - runs in the iframe
+    const fileInput = document.getElementById("file-input");
+    const importBtn = document.getElementById("import-btn");
+    const statusEl = document.getElementById("status");
+    const loadingEl = document.getElementById("loading");
+    const tabs = document.querySelectorAll(".tab");
+    const tabContents = document.querySelectorAll(".tab-content");
+    const loadFromServerBtn = document.getElementById("load-from-server");
+
+    // Tab switching
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const tabName = tab.dataset.tab;
+
+        tabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        tabContents.forEach((tc) => tc.classList.remove("active"));
+        document.getElementById(`${tabName}-tab`).classList.add("active");
+      });
+    });
+
+    // Load from preview server button
+    loadFromServerBtn.addEventListener("click", async () => {
+      console.log("Load from server clicked");
+      loadFromServerBtn.disabled = true;
+      loadFromServerBtn.textContent = "Loading...";
+
+      try {
+        // Add cache-busting timestamp to ensure fresh content
+        const response = await fetch("http://localhost:8080/api/tar?t=" + Date.now(), {
+          cache: "no-store"
+        });
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error("No tar file loaded in loopd. Drop a .tar file into the preview server first.");
+          }
+          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        console.log("Downloaded tar from server:", arrayBuffer.byteLength, "bytes");
+
+        const options = {
+          createStyles: document.getElementById("create-styles-url").checked,
+          createColors: document.getElementById("create-colors-url").checked,
+          embedImages: document.getElementById("embed-images-url").checked,
+          autoFrame: document.getElementById("auto-frame-url").checked,
+        };
+
+        console.log("Sending import-tar message with options:", options);
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "import-tar",
+              data: arrayBuffer,
+              options,
+            },
+          },
+          "*"
+        );
+      } catch (error) {
+        console.error("Error loading from server:", error);
+        let message = error.message;
+        if (message.includes("Failed to fetch") && !message.includes("responded")) {
+          message = "Cannot connect to localhost:8080. Is loopd running?";
+        }
+        showStatus("Error: " + message, "error");
+      } finally {
+        loadFromServerBtn.disabled = false;
+        loadFromServerBtn.textContent = "📥 Load from loopd";
+      }
+    });
+
+    // Import button
+    importBtn.addEventListener("click", async () => {
+      const tab = document.querySelector(".tab.active").dataset.tab;
+      console.log("Import clicked, active tab:", tab);
+
+      if (tab === "file") {
+        if (!fileInput.files.length) {
+          showStatus("Please select a tar file first", "error");
+          return;
+        }
+
+        const file = fileInput.files[0];
+        console.log("File selected:", file.name, file.size, "bytes");
+        const arrayBuffer = await file.arrayBuffer();
+        console.log("ArrayBuffer created:", arrayBuffer.byteLength, "bytes");
+
+        const options = {
+          createStyles: document.getElementById("create-styles").checked,
+          createColors: document.getElementById("create-colors").checked,
+          embedImages: document.getElementById("embed-images").checked,
+          autoFrame: document.getElementById("auto-frame").checked,
+        };
+
+        console.log("Sending import-tar message with options:", options);
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "import-tar",
+              data: arrayBuffer,
+              options,
+            },
+          },
+          "*"
+        );
+      } else if (tab === "url") {
+        const url = document.getElementById("server-url").value;
+        if (!url) {
+          showStatus("Please enter a server URL or use the load button above", "error");
+          return;
+        }
+
+        showStatus("Fetching tar file...", "info");
+        importBtn.disabled = true;
+
+        try {
+          console.log("Fetching tar from custom URL:", url);
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch: ${response.status} ${response.statusText}. Make sure the URL points to a .tar file.`);
+          }
+
+          const arrayBuffer = await response.arrayBuffer();
+          if (arrayBuffer.byteLength === 0) {
+            throw new Error("Downloaded file is empty");
+          }
+          console.log("Downloaded tar from custom URL:", arrayBuffer.byteLength, "bytes");
+
+          const options = {
+            createStyles: document.getElementById("create-styles-url").checked,
+            createColors: document.getElementById("create-colors-url").checked,
+            embedImages: document.getElementById("embed-images-url").checked,
+            autoFrame: document.getElementById("auto-frame-url").checked,
+          };
+
+          console.log("Sending import-tar message with options:", options);
+          parent.postMessage(
+            {
+              pluginMessage: {
+                type: "import-tar",
+                data: arrayBuffer,
+                options,
+              },
+            },
+            "*"
+          );
+        } catch (error) {
+          console.error("Error fetching URL:", error);
+          showStatus("Error: " + error.message, "error");
+          importBtn.disabled = false;
+        }
+      }
+    });
+
+    // Message handler for responses from plugin
+    window.addEventListener("message", (event) => {
+      const msg = event.data.pluginMessage;
+
+      if (msg.type === "loading") {
+        if (msg.show) {
+          loadingEl.classList.add("show");
+          importBtn.disabled = true;
+        } else {
+          loadingEl.classList.remove("show");
+          importBtn.disabled = false;
+        }
+      } else if (msg.type === "success") {
+        showStatus(msg.message, "success");
+        fileInput.value = "";
+      } else if (msg.type === "error") {
+        showStatus("Error: " + msg.message, "error");
+      }
+    });
+
+    function showStatus(message, type) {
+      statusEl.textContent = message;
+      statusEl.className = `status show ${type}`;
+
+      if (type === "success") {
+        setTimeout(() => statusEl.classList.remove("show"), 3000);
+      }
+    }
+
+    // Show help on first load
+    showStatus(
+      "Ready to import markdown. Select a .tar file to get started.",
+      "info"
+    );
+  </script>
+</body>
+</html>

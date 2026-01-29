@@ -1,0 +1,112 @@
+{
+  "BlockContextMenuButton": {
+    "count": 83,
+    "samples": [
+      {
+        "tag": "button",
+        "className": "fui-Button r1tr5vfu fui-ToggleButton ___1xrzon2 f17s0j0t fmuhfee f8ryaua fip6wx9",
+        "text": ""
+      },
+      {
+        "tag": "button",
+        "className": "fui-Button r1tr5vfu fui-ToggleButton ___1xrzon2 f17s0j0t fmuhfee f8ryaua fip6wx9",
+        "text": ""
+      },
+      {
+        "tag": "button",
+        "className": "fui-Button r1tr5vfu fui-ToggleButton ___1xrzon2 f17s0j0t fmuhfee f8ryaua fip6wx9",
+        "text": ""
+      }
+    ]
+  },
+  "Tablero": {
+    "count": 1,
+    "samples": [
+      {
+        "tag": "div",
+        "className": "___knpc1g0 fpbn9d4 f1g7p592 f1z0cxze f1ypa9n1 f1linlfh f1411pxf fojcd3a f1eoyzzh",
+        "text": "ToolCommand1GitHub Copilot CLIagency copilot2\n  @media print {\n    .ms-editor-squiggler {\n        di"
+      }
+    ]
+  },
+  "column-grabber-table": {
+    "count": 1,
+    "samples": [
+      {
+        "tag": "table",
+        "className": "___k3aq2u0 fkghnvb fzy7qkc fqszjfw f18hwc0c ffokf7s f1hh1s0f f18l5jc0 fsi7ip1 f1",
+        "text": ""
+      }
+    ]
+  },
+  "user-data-table": {
+    "count": 1,
+    "samples": [
+      {
+        "tag": "table",
+        "className": "___fionev0 fkghnvb fzy7qkc fonrc96 f18hwc0c fk8brrf fdk4ulh f18l5jc0 f128mh9a f1",
+        "text": "ToolCommand1GitHub Copilot CLIagency copilot2\n  @media print {\n    .ms-editor-squiggler {\n        di"
+      }
+    ]
+  },
+  "table-cell-presence-indicator": {
+    "count": 10,
+    "samples": [
+      {
+        "tag": "div",
+        "className": "___lx8pvz0 f5mmlm1 fzdgvog far03by fe71wc6 fdk4ulh fyog149 f1ybwwlo f1ejlj6x f1e",
+        "text": "Tool"
+      },
+      {
+        "tag": "div",
+        "className": "___1tsu7rk f5mmlm1 fzdgvog far03by fe71wc6 fdk4ulh fyog149 f1ybwwlo f1ejlj6x f1e",
+        "text": "Command"
+      },
+      {
+        "tag": "div",
+        "className": "___1njl1cm f5mmlm1 fzdgvog far03by fe71wc6 fdk4ulh fyog149",
+        "text": "GitHub Copilot CLI"
+      }
+    ]
+  },
+  "RichText": {
+    "count": 4,
+    "samples": [
+      {
+        "tag": "svg",
+        "className": "fui-Icon-filled ___6j8zlp0 fz3k5b7 fhwh31m ffh37h8 fig9kup fnjidrf f2dn0z0 f1i97",
+        "text": ""
+      },
+      {
+        "tag": "svg",
+        "className": "fui-Icon-regular ___9llq0m0 fv95cqy fhwh31m ffh37h8 fig9kup fnjidrf f2dn0z0 f1i9",
+        "text": ""
+      },
+      {
+        "tag": "svg",
+        "className": "fui-Icon-filled ___6j8zlp0 fz3k5b7 fhwh31m ffh37h8 fig9kup fnjidrf f2dn0z0 f1i97",
+        "text": ""
+      }
+    ]
+  },
+  "table-column-resize-element": {
+    "count": 15,
+    "samples": [
+      {
+        "tag": "div",
+        "className": "cellDecorativeDivClass ___1h55tmp f1tzc6wh f2cb4dk f18bi6n6 f1l43x31 fzogvs2 f16",
+        "text": ""
+      },
+      {
+        "tag": "div",
+        "className": "cellDecorativeDivClass ___eg1v800 f1tzc6wh f2cb4dk f18bi6n6 f1l43x31 fzogvs2 f16",
+        "text": ""
+      },
+      {
+        "tag": "div",
+        "className": "cellDecorativeDivClass ___1h55tmp f1tzc6wh f2cb4dk f18bi6n6 f1l43x31 fzogvs2 f16",
+        "text": ""
+      }
+    ]
+  }
+}

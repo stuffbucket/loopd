@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>loopd - M365 Loop Exporter</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg: #0d1117;
+            --bg-secondary: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --green: #3fb950;
+            --purple: #a371f7;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tagline {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            color: var(--text);
+        }
+        
+        p {
+            margin-bottom: 16px;
+            color: var(--text-muted);
+        }
+        
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .steps {
+            counter-reset: step;
+            list-style: none;
+        }
+        
+        .steps li {
+            position: relative;
+            padding-left: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .steps li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text);
+        }
+        
+        .steps li strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .copy-btn:hover {
+            filter: brightness(1.1);
+        }
+        
+        .copy-btn.copied {
+            background: var(--green);
+        }
+        
+        .copy-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .bookmarklet-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--purple);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: grab;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            user-select: none;
+        }
+        
+        .bookmarklet-link:hover {
+            filter: brightness(1.1);
+        }
+        
+        .bookmarklet-link:active {
+            cursor: grabbing;
+        }
+        
+        .bookmarklet-link svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .bookmarklet-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .bookmarklet-section p {
+            font-size: 0.9em;
+            margin-bottom: 12px;
+        }
+        
+        .bookmarklet-note {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+        
+        .bookmarklet-note strong {
+            color: #d29922;
+        }
+        
+        code {
+            background: var(--bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+        
+        kbd {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            font-size: 0.85em;
+        }
+        
+        .browser-keys {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .browser-row {
+            display: grid;
+            grid-template-columns: 70px 1fr 1fr;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px;
+        }
+        
+        .browser-name {
+            color: var(--text);
+            font-weight: 500;
+        }
+        
+        .keys {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .keys kbd {
+            font-size: 11px;
+            padding: 2px 5px;
+        }
+        
+        .os-label {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-left: 4px;
+        }
+        
+        .keys-note {
+            color: var(--text-muted);
+            font-size: 11px;
+            font-style: italic;
+        }
+        
+        .templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .template-link {
+            display: block;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        
+        .template-link:hover {
+            border-color: var(--accent);
+            background: rgba(88, 166, 255, 0.05);
+        }
+        
+        .template-link strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .template-link span {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+        
+        .status-dot.loaded {
+            background: var(--green);
+        }
+        
+        .status-dot.waiting {
+            background: #d29922;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        
+        .footer {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            padding-bottom: 60px;
+        }
+        
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .card-header {
+            margin-top: 0;
+        }
+        
+        .card-loaded {
+            margin-top: 32px;
+            border-color: var(--green);
+        }
+        
+        .card-loaded h2 {
+            margin-top: 0;
+            color: var(--green);
+        }
+        
+        .card-loaded .tar-name {
+            color: var(--text);
+        }
+        
+        .card-loaded .tar-info {
+            margin-bottom: 0;
+        }
+        
+        .card-loaded .tar-meta {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>loopd</h1>
+        <p class="tagline">Export M365 Loop pages to clean GitHub-Flavored Markdown</p>
+        
+        <div class="card">
+            <h2 class="card-header">Quick Start</h2>
+            <ol class="steps">
+                <li>
+                    <strong>Copy the export script</strong>
+                    Click the button below to copy <code>loopd.js</code> to your clipboard
+                </li>
+                <li>
+                    <strong>Open a Loop page</strong>
+                    Navigate to the Loop page you want to export in your browser
+                </li>
+                <li>
+                    <strong>Open DevTools Console</strong>
+                    <div class="browser-keys">
+                        <div class="browser-row">
+                            <span class="browser-name">Chrome</span>
+                            <span class="keys"><kbd>⌘</kbd><kbd>⌥</kbd><kbd>J</kbd> <span class="os-label">Mac</span></span>
+                            <span class="keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>J</kbd> <span class="os-label">Win</span></span>
+                        </div>
+                        <div class="browser-row">
+                            <span class="browser-name">Firefox</span>
+                            <span class="keys"><kbd>⌘</kbd><kbd>⌥</kbd><kbd>K</kbd> <span class="os-label">Mac</span></span>
+                            <span class="keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>K</kbd> <span class="os-label">Win</span></span>
+                        </div>
+                        <div class="browser-row">
+                            <span class="browser-name">Safari</span>
+                            <span class="keys"><kbd>⌘</kbd><kbd>⌥</kbd><kbd>C</kbd> <span class="os-label">Mac</span></span>
+                            <span class="keys-note">Enable in Develop menu first</span>
+                        </div>
+                        <div class="browser-row">
+                            <span class="browser-name">Edge</span>
+                            <span class="keys"><kbd>⌘</kbd><kbd>⌥</kbd><kbd>J</kbd> <span class="os-label">Mac</span></span>
+                            <span class="keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>J</kbd> <span class="os-label">Win</span></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <strong>Paste and run</strong>
+                    Paste the script into the console and press <kbd>Enter</kbd>
+                </li>
+            </ol>
+            
+            <button class="copy-btn" onclick="copyScript()" id="copyBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copyText">Copy loopd.js to Clipboard</span>
+            </button>
+            
+            <div class="bookmarklet-section">
+                <p><strong>One-click export:</strong> Drag this button to your bookmarks bar, then click it on any Loop page:</p>
+                <a href="javascript:(function(){var s=document.createElement('script');s.src='http://localhost:{{.Port}}/loopd.js';document.body.appendChild(s)})()" class="bookmarklet-link" onclick="event.preventDefault();alert('Drag this to your bookmarks bar, don\'t click it!')">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+                    </svg>
+                    Export Loop
+                </a>
+                <div class="bookmarklet-note">
+                    <strong>Setup:</strong> Show your bookmarks bar (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> on Windows, <kbd>⌘</kbd><kbd>Shift</kbd><kbd>B</kbd> on Mac), then drag the button above to it. On any Loop page, click the bookmarklet and wait for the export to complete.
+                    <br><br>
+                    <strong>Note:</strong> Works on Edge and Chrome. Safari blocks bookmarklets on some sites—use the copy/paste method above instead.
+                </div>
+            </div>
+        </div>
+        
+        <h2>Preview Templates</h2>
+        <p>Once you have an export, view it with different styles:</p>
+        
+        <div class="templates">
+            <a href="/minimal" class="template-link">
+                <strong>Minimal</strong>
+                <span>Dark mode, GitHub styling</span>
+            </a>
+            <a href="/github" class="template-link">
+                <strong>GitHub</strong>
+                <span>File browser layout</span>
+            </a>
+            <a href="/vignelli" class="template-link">
+                <strong>Vignelli</strong>
+                <span>Typography-focused, serif body</span>
+            </a>
+        </div>
+        
+        <h2>Tools</h2>
+        <p>Additional utilities for Loop and Figma workflows:</p>
+        
+        <div class="templates">
+            <a href="/plugins/loopd-figma-detect/index.html" class="template-link">
+                <strong>Figma Detector</strong>
+                <span>Check Figma desktop & MCP server</span>
+            </a>
+        </div>
+        
+        <h2>Figma Plugin</h2>
+        <p>Import your Loop exports directly into Figma with the Markdown Importer plugin:</p>
+        
+        <div class="card">
+            <ol class="steps">
+                <li>
+                    <strong>Export the plugin files</strong>
+                    Run in terminal: <code>./loopd --export-plugin ~/loopd-figma-plugin</code>
+                </li>
+                <li>
+                    <strong>Open Figma desktop app</strong>
+                    The plugin requires the desktop app, not the web version
+                </li>
+                <li>
+                    <strong>Import the plugin</strong>
+                    Go to <strong>Plugins</strong> menu → <strong>Development</strong> → <strong>Import plugin from manifest...</strong>
+                </li>
+                <li>
+                    <strong>Select the manifest file</strong>
+                    Navigate to <code>~/loopd-figma-plugin/manifest.json</code> and open it
+                </li>
+                <li>
+                    <strong>Run the plugin</strong>
+                    <strong>Plugins</strong> → <strong>Development</strong> → <strong>loopd Markdown Importer</strong>
+                </li>
+            </ol>
+        </div>
+        
+        {{if .HasContent}}
+        <div class="card card-loaded">
+            <h2>✓ Export Loaded</h2>
+            <p class="tar-meta"><strong class="tar-name">{{.TarFile}}</strong></p>
+            <p class="tar-info">{{.MarkdownSize}} • {{.ImageCount}} images • Loaded at {{.LoadedAt}}</p>
+        </div>
+        {{end}}
+        
+        <div class="footer">
+            <p>
+                <a href="https://github.com/anthropics/loopd" target="_blank">GitHub</a> •
+                <a href="/raw">View Raw Markdown</a> •
+                <a href="/images/">Browse Images</a>
+            </p>
+        </div>
+    </div>
+    
+    <div class="status-bar">
+        <div class="status-indicator">
+            <div class="status-dot {{if .HasContent}}loaded{{else}}waiting{{end}}"></div>
+            <span>
+                {{if .HasContent}}
+                    {{.TarFile}}
+                {{else}}
+                    Watching for exports...
+                {{end}}
+            </span>
+        </div>
+    </div>
+    
+    <script>
+        "use strict";
+        
+        async function copyScript() {
+            const btn = document.getElementById("copyBtn");
+            const text = document.getElementById("copyText");
+            
+            try {
+                const resp = await fetch("/loopd.js");
+                if (!resp.ok) {
+                    throw new Error("Failed to fetch script");
+                }
+                const script = await resp.text();
+                
+                await navigator.clipboard.writeText(script);
+                
+                btn.classList.add("copied");
+                text.textContent = "Copied!";
+                
+                setTimeout(function() {
+                    btn.classList.remove("copied");
+                    text.textContent = "Copy loopd.js to Clipboard";
+                }, 2000);
+            } catch (err) {
+                text.textContent = "Failed to copy: " + err.message;
+                setTimeout(function() {
+                    text.textContent = "Copy loopd.js to Clipboard";
+                }, 3000);
+            }
+        }
+        
+        {{if not .HasContent}}
+        (function() {
+            setInterval(function() {
+                fetch("/api/status")
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (data.loaded) {
+                            location.reload();
+                        }
+                    })
+                    .catch(function() { /* ignore polling errors */ });
+            }, 2000);
+        })();
+        {{end}}
+    </script>
+</body>
+</html>

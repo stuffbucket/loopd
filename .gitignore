@@ -1,0 +1,13 @@
+.archive/
+*.log
+temp/tmp
+.DS_Store
+node_modules/
+dist/
+.env
+.vscode/
+.idea/
+*.bak
+contrib/
+
+loopd 

@@ -1,0 +1,1940 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Brian Stucker - M365 Core / X3 Design - Jan 1"
+        },
+        {
+          "type": "text",
+          "value": "6"
+        },
+        {
+          "type": "text",
+          "value": ", 2026"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 1,
+      "children": [
+        {
+          "type": "text",
+          "value": "Installing Claude Code"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Please read carefully."
+        },
+        {
+          "type": "text",
+          "value": " Claude Code is approved for internal use "
+        },
+        {
+          "type": "link",
+          "url": "https://eng.ms/docs/experiences-devices/global-experiences-platform/es365/claude-code-for-ed/claude-code-docs/restrictions",
+          "children": [
+            {
+              "type": "text",
+              "value": "following these requirements"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        },
+        {
+          "type": "text",
+          "value": "which are summarized below"
+        },
+        {
+          "type": "text",
+          "value": ":"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "spread": false,
+      "children": [
+        {
+          "type": "listItem",
+          "checked": null,
+          "spread": false,
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Only use Claude Code if y"
+                },
+                {
+                  "type": "text",
+                  "value": "ou reside and work in one of the supported countries or regions: "
+                },
+                {
+                  "type": "link",
+                  "url": "https://www.anthropic.com/supported-countries",
+                  "children": [
+                    {
+                      "type": "text",
+                      "value": "supported countries and regions"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "value": "."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 2,
+      "children": [
+        {
+          "type": "text",
+          "value": "Need More Help or Support?"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Start with the "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fteams.microsoft.com%2Fl%2Fchannel%2F19%253AKohb9AeZSDFTwy0zUZ-osLhXk8Xf3CeUvRqothgmvt41%2540thread.tacv2%2FPilot%2520Users%3FgroupId%3D294164cf-41ac-43cd-b4b7-8a1fe0b441f7%26tenantId%3D72f988bf-86f1-41af-91ab-2d7cd011db47&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285511095707%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=o%2FjfKamCasV8fN244YRWmjSnoEnLS%2BnTXPQu9wsk5Ek%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Pilot Users channel"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " for support, Q&A and more. For escalations, contact "
+        },
+        {
+          "type": "link",
+          "url": "mailto:exdclaudeadmins@microsoft.com",
+          "children": [
+            {
+              "type": "text",
+              "value": "exdclaudeadmins@microsoft.com"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " (be patient, this team is scaling across E+D"
+        },
+        {
+          "type": "text",
+          "value": " - the quickest way to slow them down is to repeatedly ask them for access"
+        },
+        {
+          "type": "text",
+          "value": ")"
+        },
+        {
+          "type": "text",
+          "value": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 2,
+      "children": [
+        {
+          "type": "text",
+          "value": "Step"
+        },
+        {
+          "type": "text",
+          "value": " 1: Check "
+        },
+        {
+          "type": "text",
+          "value": "A"
+        },
+        {
+          "type": "text",
+          "value": "ccess"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Verify access:"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "spread": false,
+      "children": [
+        {
+          "type": "listItem",
+          "checked": null,
+          "spread": false,
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Go to "
+                },
+                {
+                  "type": "link",
+                  "url": "https://console.anthropic.com/",
+                  "children": [
+                    {
+                      "type": "text",
+                      "value": "console.anthropic.com"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "value": " and confirm you can log in using SSO with your "
+                },
+                {
+                  "type": "inlineCode",
+                  "value": "alias@microsoft.com"
+                },
+                {
+                  "type": "text",
+                  "value": " email"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_0.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "If everything is working, you should see the following once you have logged in with your <alias>@microsoft.com account via SSO"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_1.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 2,
+      "children": [
+        {
+          "type": "text",
+          "value": "Step"
+        },
+        {
+          "type": "text",
+          "value": " 2: Install "
+        },
+        {
+          "type": "text",
+          "value": "Agency"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "What is agency"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Agency ("
+        },
+        {
+          "type": "link",
+          "url": "https://aka.ms/agency",
+          "children": [
+            {
+              "type": "text",
+              "value": "https://aka.ms/agency"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": ") is "
+        },
+        {
+          "type": "text",
+          "value": "an"
+        },
+        {
+          "type": "text",
+          "value": " agent platform for Microsoft engineers. "
+        },
+        {
+          "type": "inlineCode",
+          "value": "agency"
+        },
+        {
+          "type": "text",
+          "value": " CLI helps install and configure GitHub Copilot CLI, Claude Code CLI, MCP tools, and AI repo tools. "
+        },
+        {
+          "type": "link",
+          "url": "https://aka.ms/agency",
+          "children": [
+            {
+              "type": "text",
+              "value": "Learn more"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "‼️"
+        },
+        {
+          "type": "text",
+          "value": "Make sure to restart your terminal window after installing agency. Otherwise when you try to run it, it will say it is not found. "
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "Windows"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Open the "
+        },
+        {
+          "type": "text",
+          "value": "Start"
+        },
+        {
+          "type": "text",
+          "value": " menu, type "
+        },
+        {
+          "type": "text",
+          "value": "Windows PowerShell"
+        },
+        {
+          "type": "text",
+          "value": ", select "
+        },
+        {
+          "type": "text",
+          "value": "Windows PowerShell"
+        },
+        {
+          "type": "text",
+          "value": ", then select "
+        },
+        {
+          "type": "text",
+          "value": "Open"
+        },
+        {
+          "type": "text",
+          "value": "."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Then paste in the command below and hit enter. This should result in agency being installed on your machine."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "PowerShell"
+        },
+        {
+          "type": "inlineCode",
+          "value": "iex \"& { $(irm aka.ms/InstallTool.ps1)} agency\""
+        },
+        {
+          "type": "text",
+          "value": "Show more lines"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "MacOS"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "Opening a Terminal"
+        },
+        {
+          "type": "text",
+          "value": " Window"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Use "
+        },
+        {
+          "type": "text",
+          "value": "Command (⌘) + Space"
+        },
+        {
+          "type": "text",
+          "value": " "
+        },
+        {
+          "type": "text",
+          "value": "to bring up spotlight search, then type in "
+        },
+        {
+          "type": "inlineCode",
+          "value": "terminal"
+        },
+        {
+          "type": "text",
+          "value": " and hit enter"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_2.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_3.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "In "
+        },
+        {
+          "type": "text",
+          "value": "the"
+        },
+        {
+          "type": "text",
+          "value": " terminal window, copy paste the following into the command line and hit enter."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Shell"
+        },
+        {
+          "type": "inlineCode",
+          "value": "curl -sSfL https://aka.ms/InstallTool.sh | sh -s agency"
+        },
+        {
+          "type": "text",
+          "value": "Show more lines"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "You should then see something that looks like what's below. This is the installer being downloaded and then installed."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_4.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "Linux"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Shell"
+        },
+        {
+          "type": "inlineCode",
+          "value": "curl -sSfL https://aka.ms/InstallToolLinux.sh | sh -s agency"
+        },
+        {
+          "type": "text",
+          "value": "Show more lines"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "After installing "
+        },
+        {
+          "type": "inlineCode",
+          "value": "agency"
+        },
+        {
+          "type": "text",
+          "value": " you can access:"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "align": [
+        null,
+        null,
+        null
+      ],
+      "children": [
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Tool"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Command"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "GitHub Copilot CLI"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "inlineCode",
+                  "value": "agency copilot"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "2"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Claude Code"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "inlineCode",
+                  "value": "agency claude"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "MCP Tools"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "inlineCode",
+                  "value": "agency mcp"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "children": [
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "4"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "AI Repo Tools"
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "children": [
+                {
+                  "type": "inlineCode",
+                  "value": "agency repo"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "New"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "We encourage you to try both "
+        },
+        {
+          "type": "inlineCode",
+          "value": "agency claude"
+        },
+        {
+          "type": "text",
+          "value": " as well as "
+        },
+        {
+          "type": "inlineCode",
+          "value": "agency copilot"
+        },
+        {
+          "type": "text",
+          "value": " and compare results. The GitHub team would love your feedback. Please share your thoughts on the "
+        },
+        {
+          "type": "link",
+          "url": "https://teams.microsoft.com/l/channel/19%3A3a10724f969043c3aab0d68a939500d1%40thread.tacv2/Copilot%20CLI?groupId=5f134ecd-5789-499a-b782-1f6f2dec34de&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47",
+          "children": [
+            {
+              "type": "text",
+              "value": "Copilot CLI Teams channel"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " so the team can continue to improve this offering."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 2,
+      "children": [
+        {
+          "type": "text",
+          "value": "Step 3: Start "
+        },
+        {
+          "type": "text",
+          "value": "C"
+        },
+        {
+          "type": "text",
+          "value": "laude "
+        },
+        {
+          "type": "text",
+          "value": "C"
+        },
+        {
+          "type": "text",
+          "value": "ode"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Shell"
+        },
+        {
+          "type": "inlineCode",
+          "value": "agency claude"
+        },
+        {
+          "type": "text",
+          "value": "Show more lines"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "This will:"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "spread": false,
+      "children": [
+        {
+          "type": "listItem",
+          "checked": null,
+          "spread": false,
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Install "
+                },
+                {
+                  "type": "text",
+                  "value": "Claude Code "
+                },
+                {
+                  "type": "text",
+                  "value": "and its dependencies."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_5.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "Complete browser authentication"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "spread": false,
+      "children": [
+        {
+          "type": "listItem",
+          "checked": null,
+          "spread": false,
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Your browser "
+                },
+                {
+                  "type": "text",
+                  "value": "may"
+                },
+                {
+                  "type": "text",
+                  "value": " open to the console login page"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_6.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "🚨"
+        },
+        {
+          "type": "text",
+          "value": "Troubleshooting"
+        },
+        {
+          "type": "text",
+          "value": ": I got an"
+        },
+        {
+          "type": "text",
+          "value": " \"agency "
+        },
+        {
+          "type": "text",
+          "value": "not found"
+        },
+        {
+          "type": "text",
+          "value": "\""
+        },
+        {
+          "type": "text",
+          "value": " error"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "If you try running "
+        },
+        {
+          "type": "inlineCode",
+          "value": "agency claude"
+        },
+        {
+          "type": "text",
+          "value": " from the command line / terminal and you see something like the following:"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_7.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "This problem is caused by running the installer and then trying to run agency "
+        },
+        {
+          "type": "text",
+          "value": "back to back in the same terminal session. Part of the setup tells your OS where to find the new tool. This orientation step runs automatically when you open a new terminal window. The command "
+        },
+        {
+          "type": "inlineCode",
+          "value": "which agency"
+        },
+        {
+          "type": "text",
+          "value": " asks the OS (in this case macOS) \"which program called agency will run?\" When the OS says \"agency not found\" it's telling you that it doesn't know where to look. You can open a new terminal window or you can cheat and run the step that orients the OS yourself by typing in "
+        },
+        {
+          "type": "text",
+          "value": " "
+        },
+        {
+          "type": "text",
+          "value": " in the terminal."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_8.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 3,
+      "children": [
+        {
+          "type": "text",
+          "value": "🚨"
+        },
+        {
+          "type": "text",
+          "value": "Troubleshooting"
+        },
+        {
+          "type": "text",
+          "value": ": I got an"
+        },
+        {
+          "type": "text",
+          "value": " \""
+        },
+        {
+          "type": "text",
+          "value": "Claude Code requires git-bash"
+        },
+        {
+          "type": "text",
+          "value": "\""
+        },
+        {
+          "type": "text",
+          "value": " error"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "If you try running "
+        },
+        {
+          "type": "inlineCode",
+          "value": "agency claude"
+        },
+        {
+          "type": "text",
+          "value": " from the command line"
+        },
+        {
+          "type": "text",
+          "value": " in windows "
+        },
+        {
+          "type": "text",
+          "value": "and you see something like the following:"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_9.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "This problem is discussed in Anthropic's Claude Code "
+        },
+        {
+          "type": "link",
+          "url": "https://code.claude.com/docs/en/troubleshooting#windows:-%E2%80%9Cclaude-code-on-windows-requires-git-bash%E2%80%9D",
+          "children": [
+            {
+              "type": "text",
+              "value": "support and troubleshooting guide"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 2,
+      "children": [
+        {
+          "type": "text",
+          "value": "Step "
+        },
+        {
+          "type": "text",
+          "value": "4"
+        },
+        {
+          "type": "text",
+          "value": ": "
+        },
+        {
+          "type": "text",
+          "value": "Setup Claude Code"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_10.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Once you select a theme in Claude Code, you will be directed to a new browser tab to authorize Claude Code to connect with Anthropic. "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_11.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_12.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_13.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_14.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_15.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "DO NOT let Claude Code have access to important directories on your machine."
+        },
+        {
+          "type": "text",
+          "value": " "
+        },
+        {
+          "type": "text",
+          "value": "⬇️"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "By default your terminal window will open in the ~ directory (this is your home directory, shown here for me as /Users/brian). This directory houses all your documents, downloads, setup files, SSH keys... This is a very bad directory to give it access to. Never give agents access to this directory. So we are going to "
+        },
+        {
+          "type": "text",
+          "value": "hit ESC to cancel"
+        },
+        {
+          "type": "text",
+          "value": "."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_16.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_17.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Run the following commands to make a new directory called Claude under your ~ directory."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Shell"
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "lang": null,
+      "value": "cd ~\nmkdir Claude\ncd Claude"
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Show more lines"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_18.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Now go ahead and restart claude by entering "
+        },
+        {
+          "type": "inlineCode",
+          "value": "2"
+        },
+        {
+          "type": "text",
+          "value": "again."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_19.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Now we are cooking. Every time you open up claude code you willl be asked if you trust the files in the folder that claude opened in. Always pay attention to this question and answer NO if you don't know what to do."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_20.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Now, for macOS, here is a way to create a nice shortcut for the new ~/Claude folder that you made. In finder, click on Go then Go to Folder"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_21.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Then type in "
+        },
+        {
+          "type": "text",
+          "value": "/Claude"
+        },
+        {
+          "type": "inlineCode",
+          "value": "~/Claude"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_22.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Once you are in the folder, now you can click File / Add to "
+        },
+        {
+          "type": "text",
+          "value": "Dock"
+        },
+        {
+          "type": "text",
+          "value": " (or \"Add to Sidebar\")"
+        },
+        {
+          "type": "text",
+          "value": " which will add it to the Finder's left nav list"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_23.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 2,
+      "children": [
+        {
+          "type": "text",
+          "value": "Optional: Create Projects and Run Claude"
+        },
+        {
+          "type": "text",
+          "value": " Code"
+        },
+        {
+          "type": "text",
+          "value": " from "
+        },
+        {
+          "type": "text",
+          "value": "Folder"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "As you use Claude Code you will want to keep the files for different projects separate from one another. In your "
+        },
+        {
+          "type": "inlineCode",
+          "value": "~/Claude"
+        },
+        {
+          "type": "text",
+          "value": " "
+        },
+        {
+          "type": "text",
+          "value": "folder you can create new folders for each Project. Right-click on the folder and click on New Terminal at Folder will open the terminal in that folder. "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_24.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_25.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "You can always verify the folder you're in by typing "
+        },
+        {
+          "type": "inlineCode",
+          "value": "pwd"
+        },
+        {
+          "type": "text",
+          "value": " which means \"print working directory.\" It's a good habit to get into until you're confident that you're where you expect to be."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "image",
+          "url": "images/image_26.png",
+          "alt": "Image has no description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "Once your terminal is in the right folder you can run agency claude to start a new copy of Claude Code in that project space."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "depth": 2,
+      "children": [
+        {
+          "type": "text",
+          "value": "Optional: Additional Resources to Level Up Your Skills"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.anthropic.com%2Fnews%2Fhow-anthropic-teams-use-claude-code&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285510726172%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=h5PeegTxVZvsII7fXs%2BVkTdE1PQBR1bmGX1BjPQtOG0%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "How Anthropic Teams use Claude Code"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcode.claude.com%2Fdocs&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285510738531%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=XbMf1qcKgw3nVcwltyIdcs9ST6DYMQa%2BvN7TaIk4zkU%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Claude Code Documentation"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclaude.com%2Fproduct%2Fclaude-code&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285510750602%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=HeZvDQiy95HgK0G9t%2B5mEEPDQGwxLCyY6aiyReWgTjE%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Product Page"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcode.claude.com%2Fdocs%2Fen%2Fquickstart&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285510762816%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ik7MifjNxZ1VZcD2d9Mduzu8Sv0%2FSrqy0xm%2B2DA59%2BY%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Quick Start Docs"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.anthropic.com%2Fengineering%2Fclaude-code-sandboxing&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285510774896%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=FzPM3r1r6pdw7uLRQWPyZwwdwjNJeCvIYLduQvj2eMg%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Engineering Blog + Sandboxing"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fanthropics%2Fclaude-code&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285510787942%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=RpFHUoTo2PSP0rz5vKvZLgNAN8u8VHbZhZFs9ESgAFc%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Claude Code GitHub Repository"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.youtube.com%2Fplaylist%3Flist%3DPLf2m23nhTg1P5BsOHUOXyQz5RhfUSSVUi&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285510812049%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=9WVuvPv7xz%2BMG2aJmVial1x5BJASSLPEn4whjLz8i9E%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Code w/ Claude Developer Conference"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.anthropic.com%2Fresearch%2Fimpact-software-development&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285511057035%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=O68yQhiRCyTs%2FA4M3cOlKz3x8WRDBmNFfOVNthzpnhg%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Analysis of top coding patterns across Claude users"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.anthropic.com%2Fengineering%2Fclaude-code-best-practices&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285511070489%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=35GpbaYoUuB6Mizv1w590qeU%2FTqkxgcUs52vc%2BCJ%2BO0%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Claude Code Best Practices"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": " "
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "value": "· "
+        },
+        {
+          "type": "link",
+          "url": "https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fteams.microsoft.com%2Fl%2Fchannel%2F19%253AKohb9AeZSDFTwy0zUZ-osLhXk8Xf3CeUvRqothgmvt41%2540thread.tacv2%2Ftab%253A%253A0b4df7fd-1272-4c2b-b6f1-5783a4660089%3Fcontext%3D%257B%2522channelId%2522%253A%252219%253AKohb9AeZSDFTwy0zUZ-osLhXk8Xf3CeUvRqothgmvt41%2540thread.tacv2%2522%257D%26tenantId%3D72f988bf-86f1-41af-91ab-2d7cd011db47&data=05%7C02%7Cbstucker%40microsoft.com%7C023abed776124d65737e08de52d81ff2%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639039285511082953%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=BilKH%2FE7Yg9PkLX6CM1fPMBIlvHP7%2FgMAkE8PFNA1AE%3D&reserved=0",
+          "children": [
+            {
+              "type": "text",
+              "value": "Reminders and Restrictions for using Claude Code in E+D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "blockquote",
+      "children": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "[!NOTE]"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "emphasis",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "Sometimes a guide just isn't enough"
+            },
+            {
+              "type": "text",
+              "value": "... here are some times you can drop by to get help, get some tips, or ask questions."
+            },
+            {
+              "type": "text",
+              "value": " "
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "spread": false,
+          "children": [
+            {
+              "type": "listItem",
+              "checked": null,
+              "spread": false,
+              "children": [
+                {
+                  "type": "paragraph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "value": "Tuesday, Jan 20 (10-11am PST): "
+                    },
+                    {
+                      "type": "link",
+                      "url": "https://teams.microsoft.com/l/meetup-join/19%3ameeting_OTliMTU0NDQtMTFkYi00ZWU1LTg1OTYtY2FmOGU5M2RhNWNj%40thread.v2/0?context=%7b%22Tid%22%3a%2272f988bf-86f1-41af-91ab-2d7cd011db47%22%2c%22Oid%22%3a%22fd6b1601-4eec-450c-b0f2-700e62a3f3c6%22%7d",
+                      "children": [
+                        {
+                          "type": "text",
+                          "value": "Getting Started with Claude Code (Informally)"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "Join folks from Anthropic who will be doing live demos with Claude Code for us"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "spread": false,
+          "children": [
+            {
+              "type": "listItem",
+              "checked": null,
+              "spread": false,
+              "children": [
+                {
+                  "type": "paragraph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "value": "Monday, Jan 26 (3-4pm PST): "
+                    },
+                    {
+                      "type": "link",
+                      "url": "https://teams.microsoft.com/l/meetup-join/19%3ameeting_MTc2OTJjM2MtMGI4My00YmZlLWFkNjItYTE1YzZkNGVhODE1%40thread.v2/0?context=%7b%22Tid%22%3a%2272f988bf-86f1-41af-91ab-2d7cd011db47%22%2c%22Oid%22%3a%22817431d7-32e5-4262-8460-100556f67f61%22%7d",
+                      "children": [
+                        {
+                          "type": "text",
+                          "value": "AI Learning - Lives Demos from Anthropic"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "Know of an event or resource that we don't have here? Let me know and we'll get it "
+            },
+            {
+              "type": "text",
+              "value": "added."
+            },
+            {
+              "type": "text",
+              "value": " "
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

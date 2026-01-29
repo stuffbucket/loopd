@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma Integration Detector</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg: #0d1117;
+            --bg-secondary: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tagline {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+        
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .status-icon {
+            font-size: 32px;
+        }
+        
+        .status-text h2 {
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+        
+        .status-text p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .checks {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 6px;
+        }
+        
+        .check-icon {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .check-label {
+            flex: 1;
+        }
+        
+        .check-value {
+            font-weight: 600;
+        }
+        
+        .check-value.success { color: var(--green); }
+        .check-value.error { color: var(--red); }
+        
+        .recommendations {
+            background: var(--bg);
+            border-left: 3px solid var(--yellow);
+            padding: 16px;
+            border-radius: 6px;
+            margin-top: 16px;
+        }
+        
+        .recommendations h3 {
+            font-size: 0.9rem;
+            color: var(--yellow);
+            margin-bottom: 8px;
+        }
+        
+        .recommendations ol {
+            padding-left: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
+        
+        .refresh-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+        
+        .refresh-btn:hover {
+            filter: brightness(1.1);
+        }
+        
+        .meta {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .back-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to loopd</a>
+        <h1>Figma Integration Detector</h1>
+        <p class="tagline">Check if Figma desktop and MCP server are ready</p>
+        
+        <div class="card" id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 12px;">Checking Figma status...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        "use strict";
+        
+        async function checkFigma() {
+            try {
+                const response = await fetch("/api/figma-detect");
+                const data = await response.json();
+                renderResult(data);
+            } catch (err) {
+                renderError(err);
+            }
+        }
+        
+        function renderResult(data) {
+            const statusIcon = data.both_ready ? "✅" : "⚠️";
+            const statusClass = data.both_ready ? "success" : "warning";
+            
+            let html = `
+                <div class="status-header">
+                    <div class="status-icon">${statusIcon}</div>
+                    <div class="status-text">
+                        <h2>${data.status}</h2>
+                        <p>${data.both_ready ? "Ready to export to Figma" : "Setup incomplete"}</p>
+                    </div>
+                </div>
+                
+                <div class="checks">
+                    <div class="check-item">
+                        <div class="check-icon">${data.figma_running ? "✓" : "✗"}</div>
+                        <div class="check-label">Figma Desktop Running</div>
+                        <div class="check-value ${data.figma_running ? "success" : "error"}">
+                            ${data.figma_running ? "Yes" : "No"}
+                        </div>
+                    </div>
+                    ${data.process_pid ? `
+                    <div class="check-item">
+                        <div class="check-icon">🔢</div>
+                        <div class="check-label">Process ID</div>
+                        <div class="check-value">${data.process_pid}</div>
+                    </div>
+                    ` : ""}
+                    <div class="check-item">
+                        <div class="check-icon">${data.port_bound ? "✓" : "✗"}</div>
+                        <div class="check-label">MCP Server Port 3845</div>
+                        <div class="check-value ${data.port_bound ? "success" : "error"}">
+                            ${data.port_bound ? "Bound" : "Not Bound"}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if (data.recommendations && data.recommendations.length > 0) {
+                html += `
+                    <div class="recommendations">
+                        <h3>Recommendations</h3>
+                        <ol>
+                            ${data.recommendations.map(r => `<li>${r}</li>`).join("")}
+                        </ol>
+                    </div>
+                `;
+            }
+            
+            html += `
+                <button class="refresh-btn" onclick="checkFigma()">
+                    🔄 Refresh Status
+                </button>
+                
+                <div class="meta">
+                    <span>Last checked: ${new Date(data.timestamp).toLocaleTimeString()}</span>
+                    <span>Port: 3845</span>
+                </div>
+            `;
+            
+            document.getElementById("content").innerHTML = html;
+        }
+        
+        function renderError(err) {
+            document.getElementById("content").innerHTML = `
+                <div class="status-header">
+                    <div class="status-icon">❌</div>
+                    <div class="status-text">
+                        <h2>Detection Error</h2>
+                        <p>Failed to check Figma status</p>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; color: var(--red);">
+                    ${err.message}
+                </div>
+                <button class="refresh-btn" onclick="checkFigma()" style="margin-top: 16px;">
+                    🔄 Try Again
+                </button>
+            `;
+        }
+        
+        // Initial check
+        checkFigma();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(checkFigma, 5000);
+    </script>
+</body>
+</html>
