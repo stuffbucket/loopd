@@ -27,7 +27,8 @@ builds:
       - -X main.version={{.Version}}
       - -X main.commit={{.Commit}}
       - -X main.date={{.Date}}
-    # Exclude Windows ARM64 (limited support)
+    flags:
+      - -trimpath
     ignore:
       - goos: windows
         goarch: arm64
@@ -44,25 +45,40 @@ archives:
       {{ .ProjectName }}_
       {{- .Version }}_
       {{- .Os }}_
-      {{- .Arch }}
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "arm64" }}aarch64
+      {{- else }}{{ .Arch }}{{ end }}
     files:
       - README.md
       - LICENSE
-      - plugins/loopd-loop-export/loopd.js
-      - plugins/loopd-markdown-importer/*
 
 checksum:
   name_template: 'checksums.txt'
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
 
 changelog:
   sort: asc
+  use: github
   filters:
     exclude:
       - '^docs:'
       - '^test:'
+      - '^ci:'
       - '^chore:'
       - Merge pull request
       - Merge branch
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: Bug Fixes
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Other
+      order: 999
 
 release:
   github:
@@ -70,22 +86,39 @@ release:
     name: loopd
   draft: false
   prerelease: auto
-  name_template: "v{{.Version}}"
+  name_template: "{{.ProjectName}} v{{.Version}}"
+  header: |
+    ## loopd v{{.Version}}
+    
+    Export Loop pages to portable Markdown with images preserved.
+    
+    ### Installation
+    
+    **Homebrew (macOS, Linux, WSL2):**
+    ```bash
+    brew install stuffbucket/tap/loopd
+    ```
+    
+    **Manual download:** See assets below.
 
+# Homebrew tap configuration
+# Requires HOMEBREW_TAP_TOKEN secret with write access to stuffbucket/homebrew-tap
 brews:
   - name: loopd
+    ids:
+      - default
     repository:
       owner: stuffbucket
       name: homebrew-tap
+      branch: main
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     directory: Formula
     homepage: "https://github.com/stuffbucket/loopd"
     description: "Export Loop pages to portable Markdown with images preserved"
     license: "MIT"
+    # Skip if token not available (local builds)
+    skip_upload: "{{ if .Env.HOMEBREW_TAP_TOKEN }}false{{ else }}true{{ end }}"
     install: |
       bin.install "loopd"
-      # Install plugin files for --copy-script and --export-plugin
-      (share/"loopd/plugins/loopd-loop-export").install "plugins/loopd-loop-export/loopd.js"
-      (share/"loopd/plugins/loopd-markdown-importer").install Dir["plugins/loopd-markdown-importer/*"]
     test: |
-      system "#{bin}/loopd", "--version"
+      system bin/"loopd", "--version"

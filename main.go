@@ -33,6 +33,18 @@ import (
 //go:embed templates/*
 var templates embed.FS
 
+//go:embed plugins/loopd-loop-export/loopd.js
+var loopdJS []byte
+
+//go:embed plugins/loopd-markdown-importer/manifest.json
+var figmaManifest []byte
+
+//go:embed plugins/loopd-markdown-importer/code.js
+var figmaCode []byte
+
+//go:embed plugins/loopd-markdown-importer/ui.html
+var figmaUI []byte
+
 const appName = "loopd"
 
 // Version information - injected at build time via ldflags
@@ -707,50 +719,22 @@ func (m model) cmdPlugin(destDir string) tea.Cmd {
 	}
 }
 
-// exportFigmaPlugin exports the Figma plugin files to the specified directory
+// exportFigmaPlugin exports the embedded Figma plugin files to the specified directory
 func exportFigmaPlugin(destDir string) error {
 	// Create destination directory
 	if err := os.MkdirAll(destDir, 0755); err != nil {
 		return fmt.Errorf("creating directory: %w", err)
 	}
 
-	// Files to export
-	pluginFiles := []string{"manifest.json", "code.js", "ui.html"}
-
-	exePath, err := os.Executable()
-	if err != nil {
-		return fmt.Errorf("getting executable path: %w", err)
-	}
-	exeDir := filepath.Dir(exePath)
-
-	// Try multiple potential source locations
-	sourceDirs := []string{
-		filepath.Join(exeDir, "plugins", "loopd-markdown-importer"),
-		"plugins/loopd-markdown-importer",
+	// Write embedded files
+	files := map[string][]byte{
+		"manifest.json": figmaManifest,
+		"code.js":       figmaCode,
+		"ui.html":       figmaUI,
 	}
 
-	var sourceDir string
-	for _, dir := range sourceDirs {
-		if _, err := os.Stat(filepath.Join(dir, "manifest.json")); err == nil {
-			sourceDir = dir
-			break
-		}
-	}
-
-	if sourceDir == "" {
-		return fmt.Errorf("plugin source files not found")
-	}
-
-	// Copy each file
-	for _, filename := range pluginFiles {
-		src := filepath.Join(sourceDir, filename)
+	for filename, data := range files {
 		dst := filepath.Join(destDir, filename)
-
-		data, err := os.ReadFile(src)
-		if err != nil {
-			return fmt.Errorf("reading %s: %w", filename, err)
-		}
-
 		if err := os.WriteFile(dst, data, 0644); err != nil {
 			return fmt.Errorf("writing %s: %w", filename, err)
 		}
@@ -823,31 +807,9 @@ func copyScriptToClipboard() error {
 	return nil
 }
 
-// getLoopdJSContent returns the loopd.js file content
+// getLoopdJSContent returns the embedded loopd.js file content
 func getLoopdJSContent() (string, error) {
-	exePath, err := os.Executable()
-	if err != nil {
-		return "", err
-	}
-
-	exeDir := filepath.Dir(exePath)
-
-	// Try multiple potential locations for loopd.js
-	potentialPaths := []string{
-		filepath.Join(exeDir, "plugins", "loopd-loop-export", "loopd.js"),
-		filepath.Join(exeDir, "loopd.js"),
-		"plugins/loopd-loop-export/loopd.js",
-		"loopd.js",
-	}
-
-	for _, p := range potentialPaths {
-		data, err := os.ReadFile(p)
-		if err == nil {
-			return string(data), nil
-		}
-	}
-
-	return "", fmt.Errorf("loopd.js not found")
+	return string(loopdJS), nil
 }
 
 func (m model) View() string {
@@ -1687,41 +1649,8 @@ func handleMinimal(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleLoopdJS(w http.ResponseWriter, r *http.Request) {
-	// Serve loopd.js from plugins/loopd-loop-export/
-	exePath, err := os.Executable()
-	if err != nil {
-		http.Error(w, "Could not locate loopd.js", 500)
-		return
-	}
-
-	exeDir := filepath.Dir(exePath)
-
-	// Try multiple potential locations for loopd.js
-	potentialPaths := []string{
-		// Development: relative to source directory
-		filepath.Join(exeDir, "plugins", "loopd-loop-export", "loopd.js"),
-		// Installed: same directory as executable
-		filepath.Join(exeDir, "loopd.js"),
-		// Working directory
-		"plugins/loopd-loop-export/loopd.js",
-		"loopd.js",
-	}
-
-	var data []byte
-	for _, p := range potentialPaths {
-		data, err = os.ReadFile(p)
-		if err == nil {
-			break
-		}
-	}
-
-	if data == nil {
-		http.Error(w, "loopd.js not found", 404)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-	w.Write(data)
+	w.Write(loopdJS)
 }
 
 func handleGithub(w http.ResponseWriter, r *http.Request) {
