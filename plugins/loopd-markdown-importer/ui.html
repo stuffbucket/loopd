@@ -256,10 +256,10 @@
     <!-- File Tab -->
     <div id="file-tab" class="tab-content active">
       <div class="section">
-        <div class="section-title">Select tar file</div>
-        <input type="file" id="file-input" accept=".tar,application/x-tar" />
+        <div class="section-title">Select file</div>
+        <input type="file" id="file-input" accept=".tar,.md,application/x-tar,text/markdown" />
         <p style="font-size: 10px; color: #999; margin-top: 4px;">
-          Export your Loop page using loopd.js to get a .tar file with content.md and images/
+          Select a .tar export (with images) or a bare .md file (placeholder images will be generated)
         </p>
       </div>
 
@@ -450,7 +450,7 @@
 
       if (tab === "file") {
         if (!fileInput.files.length) {
-          showStatus("Please select a tar file first", "error");
+          showStatus("Please select a file first", "error");
           return;
         }
 
@@ -459,6 +459,8 @@
         const arrayBuffer = await file.arrayBuffer();
         console.log("ArrayBuffer created:", arrayBuffer.byteLength, "bytes");
 
+        const isMd = file.name.endsWith(".md") || file.type === "text/markdown";
+
         const options = {
           createStyles: document.getElementById("create-styles").checked,
           createColors: document.getElementById("create-colors").checked,
@@ -466,11 +468,12 @@
           autoFrame: document.getElementById("auto-frame").checked,
         };
 
-        console.log("Sending import-tar message with options:", options);
+        const msgType = isMd ? "import-markdown" : "import-tar";
+        console.log("Sending " + msgType + " message with options:", options);
         parent.postMessage(
           {
             pluginMessage: {
-              type: "import-tar",
+              type: msgType,
               data: arrayBuffer,
               options,
             },
@@ -557,7 +560,7 @@
 
     // Show help on first load
     showStatus(
-      "Ready to import markdown. Select a .tar file to get started.",
+      "Ready to import. Select a .tar export or a bare .md file.",
       "info"
     );
   </script>

@@ -568,8 +568,108 @@ figma.showUI(__html__, { width: 360, height: 540 });
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "import-tar") {
     await handleImport(msg.data);
+  } else if (msg.type === "import-markdown") {
+    await handleMarkdownImport(msg.data);
   }
 };
+
+// ============================================================================
+// PLACEHOLDER IMAGE GENERATION
+// ============================================================================
+
+// Common desktop device aspect ratios for placeholder images
+var PLACEHOLDER_ASPECTS = [
+  { name: "16:10 (MacBook)",  width: 1440, height: 900 },
+  { name: "16:9 (Desktop)",   width: 1920, height: 1080 },
+  { name: "3:2 (Surface)",    width: 1500, height: 1000 },
+  { name: "4:3 (iPad)",       width: 1024, height: 768 },
+  { name: "21:9 (Ultrawide)", width: 2520, height: 1080 }
+];
+
+/**
+ * Generate a placeholder PNG for an image reference in bare markdown.
+ * Cycles through common desktop aspect ratios so placeholders are varied.
+ * Returns a Uint8Array of a minimal 1x1 PNG (actual dimensions are set
+ * via the frame size since Figma scales the fill).
+ */
+function generatePlaceholderImage(index) {
+  var aspect = PLACEHOLDER_ASPECTS[index % PLACEHOLDER_ASPECTS.length];
+  return {
+    width: aspect.width,
+    height: aspect.height,
+    label: aspect.name
+  };
+}
+
+/**
+ * Handle bare markdown file import.
+ * Parses the markdown text, extracts image references, and generates
+ * placeholder images that align with common desktop device aspect ratios.
+ */
+async function handleMarkdownImport(arrayBuffer) {
+  figma.ui.postMessage({ type: "loading", show: true });
+
+  try {
+    console.log("=== BARE MARKDOWN IMPORT ===");
+    console.log("ArrayBuffer byteLength:", arrayBuffer.byteLength);
+
+    // Decode the raw markdown text
+    var data = new Uint8Array(arrayBuffer);
+    var markdown = decodeUtf8(data);
+    if (!markdown || !markdown.trim()) throw new Error("Markdown file is empty");
+
+    console.log("Markdown length:", markdown.length);
+
+    // Parse markdown to AST
+    var ast = parseMarkdown(markdown);
+    console.log("Parsed " + ast.length + " nodes");
+
+    // Collect image references from AST and build placeholder images map
+    var images = {};
+    var placeholderIndex = 0;
+    for (var i = 0; i < ast.length; i++) {
+      if (ast[i].type === "image") {
+        var filename = extractFilename(ast[i].path);
+        if (!images[filename]) {
+          images[filename] = generatePlaceholderImage(placeholderIndex++);
+        }
+      }
+    }
+    console.log("Generated " + Object.keys(images).length + " placeholder image specs");
+
+    // Load fonts
+    var fontsToLoad = [
+      FONT_SANS, FONT_SANS_MEDIUM, FONT_SANS_SEMIBOLD, FONT_SANS_BOLD,
+      FONT_SANS_ITALIC, FONT_SANS_BOLD_ITALIC,
+      FONT_SERIF, FONT_SERIF_BOLD, FONT_SERIF_ITALIC, FONT_SERIF_BOLD_ITALIC,
+      FONT_MONO,
+      DEFAULT_FONT, CODE_FONT
+    ];
+    for (var f = 0; f < fontsToLoad.length; f++) {
+      try {
+        await figma.loadFontAsync(fontsToLoad[f]);
+      } catch (e) {
+        console.warn("Font load failed: " + fontsToLoad[f].family + " " + fontsToLoad[f].style);
+      }
+    }
+
+    // Get/create semantic main components
+    var mainComponents = await getOrCreateMainComponents();
+
+    // Build placeholder image components instead of real images
+    var imageMainComponents = await getOrCreatePlaceholderImageComponents(images);
+
+    // Build the document
+    await buildDocument(ast, mainComponents, imageMainComponents);
+
+    figma.ui.postMessage({ type: "success", message: "Markdown import complete! (" + Object.keys(images).length + " placeholder images)" });
+  } catch (error) {
+    console.error("Markdown import error:", error);
+    figma.ui.postMessage({ type: "error", message: error.message });
+  } finally {
+    figma.ui.postMessage({ type: "loading", show: false });
+  }
+}
 
 async function handleImport(arrayBuffer) {
   figma.ui.postMessage({ type: "loading", show: true });
@@ -1704,6 +1804,89 @@ const IMAGE_COMPONENTS_FRAME_NAME = "Image Components";
  *   sourceFrames: { filename: FrameNode }  // For cloning into documents
  * }
  */
+/**
+ * Create placeholder image components for bare markdown imports.
+ * Each placeholder is a colored rectangle with a label showing the
+ * aspect ratio and filename, sized to common desktop device dimensions.
+ */
+async function getOrCreatePlaceholderImageComponents(placeholderSpecs) {
+  var page = await getOrCreatePage("Images");
+
+  var sourceFrame = findFrameByName(page, SOURCE_IMAGES_FRAME_NAME);
+  if (!sourceFrame) {
+    sourceFrame = createContainerFrame(SOURCE_IMAGES_FRAME_NAME, "Placeholder images - replace with real assets");
+    page.appendChild(sourceFrame);
+    sourceFrame.x = 100;
+    sourceFrame.y = 100;
+  }
+
+  var sourceFrames = {};
+  var imageDimensions = {};
+  var imageHashes = {};
+
+  // Muted palette for placeholder variety
+  var placeholderColors = [
+    { r: 0.85, g: 0.88, b: 0.92 },  // cool gray
+    { r: 0.88, g: 0.85, b: 0.92 },  // lavender
+    { r: 0.85, g: 0.92, b: 0.88 },  // mint
+    { r: 0.92, g: 0.90, b: 0.85 },  // warm sand
+    { r: 0.92, g: 0.85, b: 0.87 }   // blush
+  ];
+
+  var colorIndex = 0;
+  for (var filename in placeholderSpecs) {
+    if (!placeholderSpecs.hasOwnProperty(filename)) continue;
+
+    var spec = placeholderSpecs[filename];
+    var scaled = scaleToFit(spec.width, spec.height, CONTENT_WIDTH);
+
+    // Check if already exists
+    var existing = findFrameByName(sourceFrame, filename);
+    if (existing) {
+      sourceFrames[filename] = existing;
+      imageDimensions[filename] = { width: existing.width, height: existing.height };
+      colorIndex++;
+      continue;
+    }
+
+    // Create placeholder frame (plain frame like createSourceImage)
+    var frame = figma.createFrame();
+    frame.name = filename;
+    frame.resize(scaled.width, scaled.height);
+    frame.fills = [{ type: "SOLID", color: placeholderColors[colorIndex % placeholderColors.length] }];
+    frame.clipsContent = true;
+
+    // Add a label showing aspect ratio and filename
+    try {
+      var label = figma.createText();
+      label.name = "Placeholder Label";
+      label.fontName = FONT_SANS;
+      label.fontSize = 14;
+      label.characters = spec.label + "  ·  " + filename;
+      label.fills = [{ type: "SOLID", color: { r: 0.45, g: 0.45, b: 0.45 } }];
+      label.textAlignHorizontal = "CENTER";
+      label.textAlignVertical = "CENTER";
+      label.resize(scaled.width, scaled.height);
+      label.constraints = { horizontal: "SCALE", vertical: "SCALE" };
+      frame.appendChild(label);
+    } catch (e) {
+      // Font failed - placeholder works without label
+      console.warn("Could not add placeholder label: " + e.message);
+    }
+
+    sourceFrame.appendChild(frame);
+    sourceFrames[filename] = frame;
+    imageDimensions[filename] = { width: scaled.width, height: scaled.height };
+    colorIndex++;
+  }
+
+  return {
+    imageHashes: imageHashes,
+    imageDimensions: imageDimensions,
+    sourceFrames: sourceFrames
+  };
+}
+
 async function getOrCreateImageComponents(images) {
   const page = await getOrCreatePage("Images");
   
